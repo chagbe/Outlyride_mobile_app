@@ -1,19 +1,23 @@
 {
   "expo": {
-    "name": "expo-go",
-    "slug": "expo-go",
+    "name": "Outlyride",
+    "slug": "outlyride-expo-go",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo-transparent.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "icon": "./assets/icon.png",
+      "supportsTablet": true,
+      "bundleIdentifier": "com.outlyride.expogo"
     },
     "android": {
+      "icon": "./assets/logo-transparent.png",
+      "package": "com.outlyride.expogo",
+      "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#EAF7ED",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false
