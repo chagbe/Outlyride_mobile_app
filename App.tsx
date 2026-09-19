@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
+import * as Location from 'expo-location';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, initialWindowMetrics, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
+import { WebView, type WebViewMessageEvent } from 'react-native-webview';
 import { embeddedOutlyrideHtml } from './embeddedOutlyride';
 import { nativeLayoutScript } from './nativeLayout';
 
@@ -43,6 +44,41 @@ function OutlyrideWebView() {
     webView.current?.injectJavaScript(layoutScript);
   }, [layoutScript]);
 
+  const sendLocalityResult = (result: { requestId: string; city?: string; latitude?: number; longitude?: number; error?: 'denied' | 'unavailable' }) => {
+    const detail = JSON.stringify(result).replace(/</g, '\\u003c');
+    webView.current?.injectJavaScript(`window.dispatchEvent(new CustomEvent('outlyride-native-locality', { detail: ${detail} })); true;`);
+  };
+
+  const handleWebMessage = async (event: WebViewMessageEvent) => {
+    let request: { type?: string; requestId?: string };
+    try {
+      request = JSON.parse(event.nativeEvent.data);
+    } catch {
+      return;
+    }
+    if (request.type !== 'detect-locality' || typeof request.requestId !== 'string' || !/^locality-[a-zA-Z0-9-]+$/.test(request.requestId)) return;
+
+    const requestId = request.requestId;
+    try {
+      const permission = await Location.requestForegroundPermissionsAsync();
+      if (permission.status !== 'granted') {
+        sendLocalityResult({ requestId, error: 'denied' });
+        return;
+      }
+      const { coords } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+      let city: string | undefined;
+      try {
+        const addresses = await Location.reverseGeocodeAsync({ latitude: coords.latitude, longitude: coords.longitude });
+        city = addresses.find((address) => address.city)?.city ?? undefined;
+      } catch {
+        // The embedded app can still match nearby listed cities from coordinates.
+      }
+      sendLocalityResult({ requestId, city, latitude: coords.latitude, longitude: coords.longitude });
+    } catch {
+      sendLocalityResult({ requestId, error: 'unavailable' });
+    }
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={0}>
       <StatusBar style="dark" />
@@ -59,6 +95,7 @@ function OutlyrideWebView() {
         overScrollMode="never"
         javaScriptEnabled
         domStorageEnabled
+        onMessage={handleWebMessage}
         startInLoadingState
         mixedContentMode="always"
         setSupportMultipleWindows={false}

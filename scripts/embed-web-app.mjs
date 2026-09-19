@@ -38,6 +38,7 @@ const mimeTypes = {
 
 const homeAssetPaths = new Set([
   '/assets/outlyride/app-logo-transparent.png',
+  '/assets/outlyride/bookings-signed-out-hero-v2.png',
   '/assets/outlyride/delivery-box.png',
   '/assets/outlyride/discover-together.png',
   '/assets/outlyride/header-city.png',

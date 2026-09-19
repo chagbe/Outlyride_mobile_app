@@ -6,6 +6,14 @@
     "orientation": "portrait",
     "icon": "./assets/logo-transparent.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Outlyride to find your city for local events and rides. / Autorisez Outlyride à trouver votre ville pour les événements et trajets locaux."
+        }
+      ]
+    ],
     "ios": {
       "icon": "./assets/icon.png",
       "supportsTablet": true,
