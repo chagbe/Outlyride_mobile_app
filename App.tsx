@@ -25,7 +25,9 @@ function OutlyrideWebView() {
   // Changing the HTML source on rotation would reload the page and discard the user's form.
   const source = useMemo(() => ({
     html: embeddedOutlyrideHtml.replace('<head>', `<head><script>${initialLayoutScript.current}</script>`),
-    baseUrl: 'https://outlyride.local',
+    // Android assets supplied by React Native resolve to file:// URLs. Use a
+    // file base URL so the WebView can render those packaged images directly.
+    baseUrl: Platform.OS === 'android' ? 'file:///' : 'https://outlyride.local',
   }), []);
 
   useEffect(() => {
@@ -87,6 +89,9 @@ function OutlyrideWebView() {
         style={styles.webView}
         source={source}
         originWhitelist={['*']}
+        allowFileAccess
+        allowFileAccessFromFileURLs
+        allowUniversalAccessFromFileURLs={false}
         injectedJavaScriptBeforeContentLoaded={layoutScript}
         automaticallyAdjustContentInsets={false}
         automaticallyAdjustsScrollIndicatorInsets={false}

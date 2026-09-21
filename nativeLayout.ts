@@ -16,6 +16,7 @@ export function nativeLayoutScript(platform: string, insets: SafeInsets, keyboar
   return `(function () {
     ${bridge}
     window.__OUTLYRIDE_NATIVE__ = true;
+    window.__OUTLYRIDE_EXPO_EMBEDDED__ = true;
     var root = document.documentElement;
     if (!root) return;
     ${properties}

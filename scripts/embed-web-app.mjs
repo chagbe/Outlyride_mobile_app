@@ -54,7 +54,8 @@ for (const assetPath of assetPaths) {
   const isDiscoverArtwork =
     assetPath.startsWith('/assets/outlyride/events/') ||
     assetPath.startsWith('/assets/outlyride/places/') ||
-    assetPath.startsWith('/assets/outlyride/stories/');
+    assetPath.startsWith('/assets/outlyride/stories/') ||
+    assetPath.startsWith('/assets/outlyride/offers/');
 
   if (!homeAssetPaths.has(assetPath) && !isDiscoverArtwork) {
     javascript = javascript.split(assetPath).join(transparentPixel);
