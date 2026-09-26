@@ -2,7 +2,7 @@
   "expo": {
     "name": "Outlyride",
     "slug": "outlyride-expo-go",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,7 @@
     "android": {
       "icon": "./assets/icon-transparent-safe.png",
       "package": "com.outlyride.expogo",
-      "versionCode": 8,
+      "versionCode": 9,
       "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "backgroundColor": "#EAF7ED",
